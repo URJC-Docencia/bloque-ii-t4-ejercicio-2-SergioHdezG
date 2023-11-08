@@ -16,18 +16,58 @@ import material.tree.binarytree.LinkedBinaryTree;
  * @param <E>
  */
 public class LinkedBinarySearchTree<E> implements BinarySearchTree<E> {
-    
+    private LinkedBinaryTree<E> tree;
+    private Comparator<E> comp;
+    private int size;
+
     public LinkedBinarySearchTree(Comparator<E> c){
-        throw new RuntimeException("Not implemented yet.");
+        this.comp = c;
+        this.tree =new LinkedBinaryTree<>();
+        this.size = 0;
     }
     
    public LinkedBinarySearchTree(){
-       throw new RuntimeException("Not implemented yet.");
+        this(new DefaultComparator<>());
    }
 
     @Override
     public Position<E> find(E value) {
-        throw new RuntimeException("Not implemented yet.");
+        return treeSearch(value, tree.root());
+    }
+
+    private Position<E> treeSearch(E value, Position<E> pos){
+        if (this.comp.compare(value, pos.getElement()) < 0){ // si value es menor
+            if (tree.hasLeft(pos)){
+                return treeSearch(value, tree.left(pos));
+            }else{
+                return null;
+            }
+        }
+        else if (this.comp.compare(value, pos.getElement()) > 0){  // si value es mayor
+            if (tree.hasRight(pos)){
+                return treeSearch(value, tree.right(pos));
+            }
+            else{
+                return null;
+            }
+        }
+        else if(value.equals(pos.getElement())){
+            return pos;
+        }
+        return null;
+    }
+
+    private Position<E> treeSearch2(E value, Position<E> pos){
+        if (this.comp.compare(value, pos.getElement()) < 0 && tree.hasLeft(pos)){ // si value es menor
+                return treeSearch(value, tree.left(pos));
+        }
+        else if (this.comp.compare(value, pos.getElement()) > 0 && tree.hasRight(pos)){  // si value es mayor
+                return treeSearch(value, tree.right(pos));
+        }
+        else if(value.equals(pos.getElement())){
+            return pos;
+        }
+        return null;
     }
 
     @Override
@@ -37,7 +77,28 @@ public class LinkedBinarySearchTree<E> implements BinarySearchTree<E> {
 
     @Override
     public Position<E> insert(E value) {
-        throw new RuntimeException("Not implemented yet.");
+        if (tree.isEmpty()){
+            return tree.addRoot(value);
+        }
+        Position<E> aux = tree.root();
+        Position<E> auxParent = null;
+
+        while (aux != null){
+            auxParent = aux;
+            if (this.comp.compare(value, aux.getElement()) < 0){  // si value es menor
+                aux = tree.left(aux);
+            }
+            else { // if (this.comp.compare(value, aux.getElement()) >= 0) // si value es mayor o igual
+                aux = tree.right(aux);
+            }
+        }
+
+        if (this.comp.compare(value, auxParent.getElement()) < 0){
+            return tree.insertLeft(auxParent, value);
+        }
+        else { // if (this.comp.compare(value, auxParent.getElement()) >= 0){
+            return tree.insertRight(auxParent, value);
+        }
     }
 
     private Position<E> sigueBuscando(E value, Position<E> p) {

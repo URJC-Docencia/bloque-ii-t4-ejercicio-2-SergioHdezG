@@ -2,12 +2,7 @@ package material.tree.binarysearchtree;
 
 import java.util.Comparator;
 
-/**
- * Comparator based on the natural ordering
- *
- * @param <E>
- */
-public class DefaultComparator<E> implements Comparator<E> {
+public class InvertedComparator<E> implements Comparator<E> {
 
     /**
      * Compares two given elements
@@ -21,6 +16,6 @@ public class DefaultComparator<E> implements Comparator<E> {
 
     @Override
     public int compare(E a, E b) throws ClassCastException {
-        return ((Comparable<E>) a).compareTo(b);
+        return -((Comparable<E>) a).compareTo(b);
     }
 }
